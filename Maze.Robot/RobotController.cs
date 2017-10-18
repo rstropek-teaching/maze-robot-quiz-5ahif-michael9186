@@ -32,15 +32,57 @@ namespace Maze.Solver
         public void MoveRobotToExit()
         {
             // Here you have to add your code
+            solve(true);
+
+
 
             // Trivial sample algorithm that can just move right
-            var reachedEnd = false;
-            robot.ReachedExit += (_, __) => reachedEnd = true;
+            //var reachedEnd = false;
+            /*robot.ReachedExit += (_, __) => reachedEnd = true;
 
             while (!reachedEnd)
             {
                 robot.Move(Direction.Right);
             }
+            */
+            
+        }
+
+        private bool solve(bool parFirstmove)
+        {
+            var reachedEnd = false;
+            robot.ReachedExit += (_, __) => reachedEnd = true;
+            Direction lastMove = Direction.Right;
+            var firstmove = parFirstmove;
+            if (reachedEnd)
+            {
+                return true;
+            }
+            else
+            {
+                if (robot.TryMove(Direction.Right) && (lastMove != Direction.Left || firstmove))
+                {
+                    lastMove = Direction.Right;
+                    solve(false);                   
+                }   
+                if (robot.TryMove(Direction.Left) && (lastMove != Direction.Right || firstmove))
+                {
+                    lastMove = Direction.Left;
+                    solve(false);
+                }
+                if (robot.TryMove(Direction.Up) && (lastMove != Direction.Down || firstmove))
+                {
+                    lastMove = Direction.Up;
+                    solve(false);
+                }
+                if (robot.TryMove(Direction.Down) && (lastMove != Direction.Up || firstmove))
+                {
+                    lastMove = Direction.Down;
+                    solve(false);
+                }
+            }
+            return false;
+            
         }
     }
 }
